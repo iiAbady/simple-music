@@ -1,4 +1,4 @@
-##simple-music
+## simple-music
 
 👵 This was my first music bot! I'll fill out how to install things soon.
 
