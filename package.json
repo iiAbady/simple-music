@@ -1,0 +1,31 @@
+{
+  "name": "simple-music",
+  "version": "1.0.0",
+  "description": "Simple shitty music",
+  "main": "music.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abady321x123/simple-music.git"
+  },
+  "author": "Abady",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abady321x123/simple-music/issues"
+  },
+  "homepage": "https://github.com/Abady321x123/simple-music#readme",
+  "dependencies": {
+    "discord.js": "^11.3.2",
+    "get-youtube-id": "^1.0.0",
+    "hh-mm-ss": "^1.2.0",
+    "node-opus": "^0.3.0",
+    "request": "^2.85.0",
+    "short-number": "^1.0.6",
+    "simple-youtube-api": "^5.0.2",
+    "youtube-info": "^1.2.0",
+    "ytdl-core": "^0.20.4",
+    "lyricist": "2.2.2"
+  }
+}
