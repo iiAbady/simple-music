@@ -11,7 +11,7 @@ client.login(TOKEN);
 var guilds = {};
 
 /////////////////////////////////////////////////////////////////
-client.on('ready', () => client.user.setActivity(`m-play , m-search.`, {type: "LISTENING"}))
+client.on('ready', () => client.user.setActivity(`${prefix}play , ${prefix}search.`, {type: "LISTENING"}))
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
  
@@ -19,7 +19,7 @@ client.on('message', async function(message) {
     if(message.author.bot) return;
     if(!message.channel.guild) return;
     //////////////////////////////////
-    if(message.content === `<@${client.user.id}>`) return message.channel.send(`Hey I'am **${client.user.username}**. A nice music bot developed by <@${client.users.get(devs[0]).id}>\nGet In touch with me \`\`m-contact\`\``);
+    if(message.content === `<@${client.user.id}>`) return message.channel.send(`Hey I'am **${client.user.username}**. A nice music bot developed by <@${client.users.get(devs[0]).id}>\nGet In touch with me \`\`${prefix}contact\`\``);
     const novc = "**:x: You are not in a voice channel.**"
     const yt = "📺"
     const correct = '✔'
@@ -106,7 +106,7 @@ client.on('message', async function(message) {
              message.channel.send("", {embed: {description: `Abayro says that would be awesome <3 **[Click here to invite me!](${link})**`, color: 0x00ff00}})
          })
      } else if(message.content.startsWith(`${prefix}contact`)) {
-        if(!args) return message.channel.send(`Get in touch with me, leave a message. (Real Inqiures Only) \`\`m-contact (Your message)\`\``)
+        if(!args) return message.channel.send(`Get in touch with me, leave a message. (Real Inqiures Only) \`\`${prefix}contact (Your message)\`\``)
         if(args.length < 2) return message.channel.send(`Your message haven't delivered. make sure your message is more than one word.`)
         client.users.get(devs[0]).send(`${args}\n\n Server: ${message.guild.name} - User: ${message.author.tag}`).then(()=> {
             message.channel.send(`**Thank you!** Your message have been delivered. I'll try to reply as soon as possible.`, {files: ['https://pbs.twimg.com/media/DeikbSqV0AAUSUU.jpg']})
@@ -148,7 +148,7 @@ client.on('message', async function(message) {
         const permissions = voiceChannel.permissionsFor(message.client.user)
         if (!permissions.has('CONNECT')) return message.channel.send({embed: {description: "🛑 I don't have permission to CONNECT! Give me some."}});
         if (!permissions.has('SPEAK')) return message.channel.send({embed: {description: "🛑 I don't have permission to SPEAK! Give me some."}});
-         if (args.length == 0 || !args) return message.channel.send(`:musical_note: m-play **<Youtube URL / Search>**`)
+         if (args.length == 0 || !args) return message.channel.send(`:musical_note: ${prefix}play **<Youtube URL / Search>**`)
             if (guilds[message.guild.id].queue.length > 0 || guilds[message.guild.id].isPlaying) {
                 if(guilds[message.guild.id].queue.length > 100) return message.channel.send(``, {embed: {
                     description: `🔒 Sorry, max queue length is 100, do **${prefix}clear** to clear entire queue or **${prefix}clear <number>** to clear 1 item`
@@ -420,7 +420,7 @@ if(message.content.startsWith(prefix+"search")) {
     }
     }})
 try {
-var response = await message.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11 || msg2.content === 'cancel' || msg2.content.startsWith("m-search") && msg2.author.id === message.author.id, {
+var response = await message.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11 || msg2.content === 'cancel' || msg2.content.startsWith(`${prefix}search`) && msg2.author.id === message.author.id, {
     maxMatches: 1,
     time: 30000,
     errors: ['time'],
@@ -433,7 +433,7 @@ if(guilds[message.guild.id].queue.length > 100) return message.channel.send(``, 
 }})
 if(!message.member.voiceChannel) return;
 if(response.first().content === 'cancel') return message.channel.send(`Alright, I've **cancelled** this opreation.`)
-if(response.first().content === 'm-search') return;
+if(response.first().content === `${prefix}search`) return;
 const videoIndex = parseInt(response.first().content)
 const voiceChannel = message.member.voiceChannel
 const permissions = voiceChannel.permissionsFor(message.client.user)
