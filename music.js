@@ -97,13 +97,14 @@ client.on('message', async function(message) {
         .addField("Creator", "Abady", true)
         .addField("Users", `${client.users.size}`, true)
         .addField('RAM Usage',`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,true)     
+        .addField('Source Code', '**[View](https://github.com/Abady321x123/simple-music)**')
         .setFooter(`Uptime ${uptime}`)
         .setColor("RANDOM")
     )
       }
      else if (message.content.startsWith(`${prefix}invite`)) {
          client.generateInvite(["SEND_MESSAGES", 'CONNECT', 'SPEAK', 'VIEW_CHANNEL', 'ADMINISTRATOR']).then(link => {
-             message.channel.send("", {embed: {description: `Abayro says that would be awesome <3 **[Click here to invite me!](${link})**`, color: 0x00ff00}})
+             message.channel.send("", {embed: {description: `${client.user.tag} says that would be awesome <3 **[Click here to invite me!](${link})**`, color: 0x00ff00}})
          })
      } else if(message.content.startsWith(`${prefix}contact`)) {
         if(!args) return message.channel.send(`Get in touch with me, leave a message. (Real Inqiures Only) \`\`${prefix}contact (Your message)\`\``)
