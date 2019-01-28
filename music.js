@@ -1,15 +1,13 @@
 const { Client, RichEmbed } = require("discord.js");
-const yt_api_key = "AIzaSyDV2JNcnCiCEW99ON7vvwBN5JkDWaIXkXc"
+const {TOKEN, YT_API_KEY, prefix, devs} = require('./config')
 const client = new Client({ disableEveryone: true})
 const ytdl = require("ytdl-core");
-const devs = ["171259176029257728", "343383616895713290"]
 const convert = require("hh-mm-ss")
 const fetchVideoInfo = require("youtube-info");
-const bot = require('./package.json');
+const botversion = require('./package.json').version;
 const simpleytapi = require('simple-youtube-api')
-const youtube = new simpleytapi(yt_api_key);
-const prefix = "m-";
-client.login(process.env.SECERT_KEY);
+const youtube = new simpleytapi(YT_API_KEY);
+client.login(TOKEN);
 var guilds = {};
 
 /////////////////////////////////////////////////////////////////
@@ -22,10 +20,10 @@ client.on('message', async function(message) {
     if(!message.channel.guild) return;
     //////////////////////////////////
     if(message.content === `<@${client.user.id}>`) return message.channel.send(`Hey I'am **${client.user.username}**. A nice music bot developed by <@${client.users.get(devs[0]).id}>\nGet In touch with me \`\`m-contact\`\``);
-    const novc = "**<:megX:476797393283710991> You are not in a voice channel.**"
-    const yt = "<:megYT:476798168684691457>"
-    const correct = client.guilds.get('466344656456908811').emojis.get("476545535348834324")
-    const nope = client.guilds.get('466344656456908811').emojis.get('476545382617186337')
+    const novc = "**:x: You are not in a voice channel.**"
+    const yt = "📺"
+    const correct = '✔'
+    const nope = '✖'
     let args = message.content.split(' ').slice(1).join(" ");
 
     if (message.content.startsWith(`${prefix}eval`)) {
@@ -67,38 +65,9 @@ client.on('message', async function(message) {
            ], 
            color: 0xF19894,
            footer: {
-               text: `${client.user.username} ${bot.version} Beta`
+               text: `${client.user.username} ${botversion} Beta`
            }
        }})
-       const foundCommand = music.find(m => m.name === args.toLowerCase()) || info.find(m => m.name === args.toLowerCase())
-       if(foundCommand) {
-        return message.channel.send("", {embed: {
-            author: {
-                name: `${foundCommand.name[0].toUpperCase() + foundCommand.name.slice(1)} Help`,
-                icon_url: "https://images-ext-2.discordapp.net/external/ixx9VwaXIvBi71wGahYe_NzG51gFQonnXVBl2eEbQmk/https/cdn.pixabay.com/photo/2012/04/14/16/26/question-34499_960_720.png?width=473&height=473"
-            },
-            fields: [
-                {
-                 name: '❯ Description',
-                 value: foundCommand.desc
-                }, 
-                {
-                name: '❯ Usage',
-                value: `\`\`${prefix + foundCommand.usage}\`\``,
-                inline: true
-                },
-                {
-                name: `❯ Aliases`,
-                value: foundCommand.aliases.map(m => m).join(" ") || "N/A",
-                inline: true
-                }
-            ], 
-            color: 0xF19894,
-        }})
-       } else return message.channel.send({embed: {
-        description:`**No command found with this name \`${args}\`**`,
-        color: 0xff0000,
-    }});
       }
 
       if(message.content.startsWith(`${prefix}info`)) {
@@ -123,13 +92,12 @@ client.on('message', async function(message) {
         message.channel.send(new RichEmbed() 
         .setAuthor(client.user.username,client.user.avatarURL)
         .setURL("https://abayro.xyz")
-        .addField("Version", bot.version, true)
-        .addField("Library", "[discordjs](https://www.npmjs.com/search?q=discord.js)", true)
+        .addField("Version", botversion, true)
+        .addField("Library", "[discordjs](https://www.npmjs.com/packages/discord.js)", true)
         .addField("Creator", "Abady", true)
         .addField("Users", `${client.users.size}`, true)
         .addField('RAM Usage',`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,true)     
-        .addField("Website", "http://abayro.xyz", true)
-        .setFooter(`Uptime ${uptime} | ${client.user.username} doesn't use Lavalink!`)
+        .setFooter(`Uptime ${uptime}`)
         .setColor("RANDOM")
     )
       }
@@ -143,50 +111,7 @@ client.on('message', async function(message) {
         client.users.get(devs[0]).send(`${args}\n\n Server: ${message.guild.name} - User: ${message.author.tag}`).then(()=> {
             message.channel.send(`**Thank you!** Your message have been delivered. I'll try to reply as soon as possible.`, {files: ['https://pbs.twimg.com/media/DeikbSqV0AAUSUU.jpg']})
         })
-     } else if (message.content.toLowerCase().startsWith(`${prefix}lyric`)) {
-const lyricistapi = require('lyricist');
-const lyric = new lyricistapi("3u50HX1N0KeDBMCN_y3W126tTcJizSOz-yJtJE7TOmQepOGkAPuzQhuZiRLG9BDn");
-try {
-    if(!args) {
-        args = guilds[message.guild.id].queueNames[0].replace(/\[[^\]]*\]/g, "").replace(/ *\([^)]*\) */g, "").replace(/[^\w\s]/gi, "");
-    } 
-} catch (error) {
-    return message.channel.send(`:x: Missing args.`)
-}
-const song = await lyric.search(args)
-if(song[0]) {
-const msg22 = await message.channel.send(`:bookmark_tabs: Fetching **${song[0].full_title}** Lyrics.`);
-const songlyrics = await lyric.song(song[0].id, {fetchLyrics: true, textFormat: "dom"})
-let fixedsonglyrics;
-if(songlyrics.lyrics.length > 2047) fixedsonglyrics = songlyrics.lyrics.slice(0, 2000 - songlyrics.url.length) + `......\n\n[**Continue Here**](${songlyrics.url})`
-else fixedsonglyrics = songlyrics.lyrics
-let youtube;
-let spotify;
-if(songlyrics.media.find(g => g.provider === 'youtube')) youtube = `${yt} [**YouTube**](${songlyrics.media.find(g => g.provider === 'youtube').url})`
-else youtube = "N/A"
-if(songlyrics.media.find(g => g.provider === 'spotify')) spotify = `<:megSp:484207121357996042> [**Spotify**](${songlyrics.media.find(g => g.provider === 'spotify').url})`
-else if(songlyrics.media.find(g => g.provider === 'apple_music')) spotify = `<:megIt:484207122222022657> [**iTunes**](${songlyrics.media.find(g => g.provider === 'apple_music').url})`
-else spotify = "N/A"
-msg22.edit("", {embed: {
-    description: `\n${fixedsonglyrics}`,
-    color:  0x7ec0ee,
-    title: songlyrics.full_title,
-    url: songlyrics.url,
-    thumbnail: {
-        url: songlyrics.header_image_url,
-    },
-fields: [{
-name: "Watch on",
-value: youtube,
-inline: true
-}, {
-name: "Listen on",
-value: spotify,
-inline: true
-}]
-}})
-} else return message.channel.send(`:x: No results for **\`\`${args}\`\`**`)
-     }
+    };
 
      function clear() { 
         guilds[message.guild.id].queue = [];
@@ -284,7 +209,7 @@ inline: true
             } else {
                 if(args.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi) && !isYoutube(args)) {
                     if(guilds[message.guild.id].queue[0]) return message.channel.send(`:x: For some reasons you canno't play any other YT stream if it's not number #1 in queue. Do **\`\`clear\`\`** and try again.`)
-                    playMusic(args, message).catch(err => message.channel.send(`<:megErrOr:475075170231517184> That's not something to play!`))
+                    playMusic(args, message).catch(err => message.channel.send(`:x: That's not something to play!`))
                     guilds
                     guilds[message.guild.id].isPlaying = true;
                     return message.channel.send(`:arrow_forward: Now playing from **${args}**`);
@@ -329,7 +254,7 @@ inline: true
                 message.channel.send(`:point_up::skin-tone-1: **${message.author.username}** has voted to skip current song! **${Math.floor(Math.ceil((guilds[message.guild.id].voiceChannel.members.size - 1) / 2) - guilds[message.guild.id].skipReq)}** more votes to skip!`);
             }
         } else {
-            message.channel.send("<:megX:476797393283710991> you already voted to skip!");
+            message.channel.send(":x: you already voted to skip!");
         }
 
     } else if (mess.startsWith(prefix + "queue") || mess.startsWith(prefix+"قائمة")) {
@@ -366,7 +291,7 @@ inline: true
             // }
             //?
             let queuelist = guilds[message.guild.id].queueNames.slice(x-10,x).map(song => `**\`\`${++i}.\`\`** [${song}](https://www.youtube.com/watch?v=${guilds[message.guild.id].queue[i]})`).join('\n\n')
-            if(!queuelist) return message.channel.send(`<:megX:476797393283710991> | Page doesn't exist!`)
+            if(!queuelist) return message.channel.send(`:x: | Page doesn't exist!`)
             const embed = new RichEmbed()
             embed.setDescription(`__Now Playing:__\n**[${guilds[message.guild.id].queueNames[0]}](https://www.youtube.com/watch?v=${guilds[message.guild.id].queue[0]})**\n\n:arrow_down: __Up Next__  :arrow_down:\n\n${queuelist}\n\n**Total items in queue:** ${guilds[message.guild.id].queueNames.length}`)
             embed.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/7/73/YouTube_Music.png")
@@ -609,7 +534,7 @@ else if (mess.startsWith(prefix + 'join') || mess.startsWith(prefix+"ادخل"))
         message.member.voiceChannel.join().then(message.react(correct));
         message.channel.send(`**:page_facing_up: Queue moved to \`\`${message.member.voiceChannel.name}\`\`**`)
     } else {
-        message.channel.send(`<:megX:476797393283710991> **Music is being played in another voice channel!**`)
+        message.channel.send(`:x: **Music is being played in another voice channel!**`)
     }
 }
 
@@ -628,7 +553,7 @@ else if (mess.startsWith(prefix + 'clear') || mess.startsWith(prefix+"نظف")) 
         guilds[message.guild.id].queue.splice(parseInt(args), 1)
         return message.channel.send(`:wastebasket: Removed **${removedsong}** from the queue.`);}
    } else if(guilds[message.guild.id].queueNames.length <= 1 ) {
-       message.channel.send(`<:megX:476797393283710991> There's only 1 item in the queue. use \`\`${prefix}skip\`\` instead! `)
+       message.channel.send(`:x: There's only 1 item in the queue. use \`\`${prefix}skip\`\` instead! `)
    }
 }
 });
@@ -677,7 +602,7 @@ async function playMusic(id, message) {
             }
         });
         guilds[message.guild.id].dispatcher.on('error', function(error) {
-          return message.channel.send(`<:megErrOr:475075170231517184> An error occurd! \`\`\`${error}\`\`\``)
+          return message.channel.send(`:x: An error occurd! \`\`\`${error}\`\`\``)
         });
     });
 }
@@ -703,26 +628,8 @@ function add_to_queue(strID, message) {
     }
 }
 
-//! DEPRCATED V
-// function search_video(query, callback) {
-//     request("https://www.googleapis.com/youtube/v3/search?part=id&type=video&q=" + encodeURIComponent(query) + "&key=" + yt_api_key, function(error, response, body) {
-//         var json = JSON.parse(body);
-//         if (!json.items[0]) callback("3_-a9nVZYjk");
-//         else {
-//             callback(json.items[0].id.videoId);
-//         }
-//     });
-// }
 function isYoutube(str) {
     return str.toLowerCase().indexOf("youtube.com") > -1 || str.toLowerCase().indexOf("youtu.be") > -1;
 }
 
-// function shuffle(a, b) {
-//     for (var i = a.length - 1; i > 0; i--) {
-//         const j = Math.floor(Math.random() * (i + 1));
-//         [a[i], a[j]] = [a[j], a[i]];
-//         [b[i], b[j]] = [b[j], b[i]];
-//     }
-//     return a, b;
-// }
 ////////////////
