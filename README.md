@@ -11,7 +11,7 @@
 
 The base idea of the music queue system came from [xtreameprogram](https://github.com/xtreameprogram)!
 
-THIS CODE ABOVE IS REALLY REALLY BAD, it might have alot of errors other than it's not readable!
+THIS CODE ABOVE IS REALLY REALLY BAD, it might have alot of errors other than it's not updated snice 6 months.
 
 ## Copyrights
 
