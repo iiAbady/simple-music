@@ -2,11 +2,10 @@
 
 👵 This was my first music bot!
 
-## Run it yourself
-
 ## توضيح
 أي إستعمال خاطئ للبكج يصدر منك إنت وأنا أتبرا منك فيه.
 
+## Run it yourself
 
 1. Edit the **`config.js`** and fill out the things
 2. Start your bot with `node music.js`
