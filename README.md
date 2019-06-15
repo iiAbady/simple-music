@@ -18,4 +18,4 @@ THIS CODE ABOVE IS REALLY REALLY BAD, it might have alot of errors other than it
 
 ## Copyrights
 
-© [**Abady**](https://github.com/Abady321x123)
+**simple music** © [**Abady**](https://github.com/Abady321x123)
